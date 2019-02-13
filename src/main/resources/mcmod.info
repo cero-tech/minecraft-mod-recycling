@@ -1,0 +1,16 @@
+[
+{
+  "modid": "${mod_id}",
+  "name": "Recycling",
+  "description": "Recycle stuff!",
+  "version": "${mod_version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["${mod_group}"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

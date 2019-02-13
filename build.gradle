@@ -1,0 +1,65 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven { url = "http://files.minecraftforge.net/maven" }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+apply plugin: 'net.minecraftforge.gradle.forge'
+//Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+
+version = "${main_version}.${build_version}"
+group = "${mod_group}"
+archivesBaseName = "${mod_id}"
+
+sourceCompatibility = targetCompatibility = '1.8'
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+}
+
+minecraft {
+    version = "${mc_version}-${forge_version}"
+    mappings = "${map_version}"
+	runDir = "run"
+}
+
+repositories {
+    maven {
+        name 'JEI'
+        url 'http://dvs1.progwml6.com/files/maven'
+    }
+}
+
+dependencies {
+    deobfCompile "mezz.jei:jei_${mc_version}:${jei_version}"
+}
+
+jar {
+    archiveName = "${mod_id}-${mc_version}-${main_version}.${build_version}.jar"
+}
+
+//task deobfJar {
+//    from sourceSets.main.output
+//        archiveName = "${mod_id}-${mc_version}-${main_version}.${build_version}-deobf.jar"
+//    classifier = 'deobf'
+//}
+
+processResources {
+    inputs.property "mod_id", project.archivesBaseName
+    inputs.property "mod_version", project.version
+    inputs.property "mcversion", project.minecraft.version
+    inputs.property "mod_group", project.group
+
+    // replace stuff in mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand 'mod_id':project.archivesBaseName, 'mod_version':project.version, 'mcversion':project.minecraft.version, 'mod_group':project.group
+    }
+
+    // copy everything else except the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}

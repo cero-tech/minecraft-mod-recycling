@@ -1,12 +1,20 @@
 package cero_tech.recycling;
 
-import cero_tech.recology.proxy.CommonProxy;
+import cero_tech.recycling.proxy.CommonProxy;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+/**
+ * Name: Recycling
+ * Description: Contains mod information, instance, proxy, and initializes the mod.
+ * Author: cero_tech
+ *
+ * Last Update: 2/13/2019
+ **/
 
 @Mod(
         modid = Recycling.MOD_ID,

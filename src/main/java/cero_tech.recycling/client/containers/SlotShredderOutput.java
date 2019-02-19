@@ -1,10 +1,10 @@
 package cero_tech.recycling.client.containers;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
 /**
  * Name: SlotShredderOutput
@@ -14,13 +14,13 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
  * Last Update: 2/14/2019
  **/
 
-public class SlotShredderOutput extends Slot {
+public class SlotShredderOutput extends SlotItemHandler {
     
     private final EntityPlayer player;
     private int removeCount;
-    
-    public SlotShredderOutput(EntityPlayer player, IInventory inventoryIn, int slotIndex, int xPosition, int yPosition) {
-        super(inventoryIn, slotIndex, xPosition, yPosition);
+
+    public SlotShredderOutput(EntityPlayer player, IItemHandler itemHandler, int slotIndex, int xPosition, int yPosition) {
+        super(itemHandler, slotIndex, xPosition, yPosition);
         this.player = player;
     }
     
@@ -53,7 +53,7 @@ public class SlotShredderOutput extends Slot {
     
     @Override
     protected void onCrafting(ItemStack stack) {
-        stack.onCrafting(this.player.world, this.player, this.removeCount);
+        stack.onCrafting(player.world, player, removeCount);
         removeCount = 0;
         FMLCommonHandler.instance().firePlayerCraftingEvent(player, stack, inventory);
     }

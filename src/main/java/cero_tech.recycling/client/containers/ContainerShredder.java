@@ -8,6 +8,10 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
 /**
  * Name: ContainerShredder
@@ -33,10 +37,12 @@ public class ContainerShredder extends Container {
     private int currentShredTime;
     private int currentEnergy;
 
-    public ContainerShredder(InventoryPlayer playerInventory, TileEntityShredder shredderInventory) {
-        this.tileShredder = shredderInventory;
-        addSlotToContainer(new Slot(shredderInventory, INPUT_SLOT_INDEX, INPUT_POS[0], INPUT_POS[1]));
-        addSlotToContainer(new SlotShredderOutput(playerInventory.player, shredderInventory, OUTPUT_SLOT_INDEX, OUTPUT_POS[0], OUTPUT_POS[1]));
+    public ContainerShredder(InventoryPlayer playerInventory, final TileEntityShredder tileShredder) {
+        this.tileShredder = tileShredder;
+        IItemHandler input = tileShredder.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
+        IItemHandler output = tileShredder.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN);
+        addSlotToContainer(new SlotItemHandler(input, INPUT_SLOT_INDEX, INPUT_POS[0], INPUT_POS[1]));
+        addSlotToContainer(new SlotShredderOutput(playerInventory.player, output, OUTPUT_SLOT_INDEX, OUTPUT_POS[0], OUTPUT_POS[1]));
         addPlayerInventorySlots(playerInventory);
     }
     
@@ -56,7 +62,7 @@ public class ContainerShredder extends Container {
     
     @Override
     public boolean canInteractWith(EntityPlayer playerIn) {
-        return tileShredder.isUsableByPlayer(playerIn);
+        return true;
     }
     
     @Override
@@ -95,11 +101,11 @@ public class ContainerShredder extends Container {
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
         ItemStack stack0 = ItemStack.EMPTY;
         Slot slot = inventorySlots.get(index);
-    
+
         if (slot != null && slot.getHasStack()) {
             ItemStack stack1 = slot.getStack();
             stack0 = stack1.copy();
-    
+
             if (index == OUTPUT_SLOT_INDEX) {
                 if (!mergeItemStack(stack1, OUTPUT_SLOT_INDEX + 1, 38, true)) {
                     return ItemStack.EMPTY;
@@ -110,21 +116,21 @@ public class ContainerShredder extends Container {
                     return ItemStack.EMPTY;
                 }
             }
-    
+
             if (stack1.isEmpty()) {
                 slot.putStack(ItemStack.EMPTY);
             }
             else {
                 slot.onSlotChanged();
             }
-    
+
             if (stack1.getCount() == stack0.getCount()) {
                 return ItemStack.EMPTY;
             }
-    
+
             slot.onTake(playerIn, stack1);
         }
-        
+
         return stack0;
     }
 }

@@ -1,11 +1,11 @@
 package cero_tech.recycling.client.containers;
 
 import cero_tech.recycling.common.recipes.RecipeRegistry;
+import cero_tech.recycling.common.tileentities.TileEntityShredder;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
@@ -27,13 +27,13 @@ public class ContainerShredder extends Container {
     
     private static final int[] INPUT_POS = {56, 35};
     private static final int[] OUTPUT_POS = {112, 31};
-    
-    private final IInventory tileShredder;
+
+    private final TileEntityShredder tileShredder;
     private int totalShredTime;
     private int currentShredTime;
     private int currentEnergy;
-    
-    public ContainerShredder(InventoryPlayer playerInventory, IInventory shredderInventory) {
+
+    public ContainerShredder(InventoryPlayer playerInventory, TileEntityShredder shredderInventory) {
         this.tileShredder = shredderInventory;
         addSlotToContainer(new Slot(shredderInventory, INPUT_SLOT_INDEX, INPUT_POS[0], INPUT_POS[1]));
         addSlotToContainer(new SlotShredderOutput(playerInventory.player, shredderInventory, OUTPUT_SLOT_INDEX, OUTPUT_POS[0], OUTPUT_POS[1]));

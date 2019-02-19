@@ -16,13 +16,13 @@ public class ConfigGeneral {
 
     @Config.Name("Max Stack Size")
     @Config.RangeInt(min = 1)
-    public static final int maxStackSize = 64;
+    public static Integer maxStackSize = 64;
 
     @Config.Name("Machine Energy Capacity")
     @Config.RangeInt(min = 1)
-    public static final int energyCapacity = 10000;
+    public static Integer energyCapacity = 10000;
 
     @Config.Name("Machine Energy Usage")
     @Config.RangeInt(min = 0)
-    public static final int energyUsage = 100;
+    public static Integer energyUsage = 100;
 }

@@ -29,6 +29,7 @@ public class GuiHandler implements IGuiHandler {
         switch (ID) {
             case GUI_SHREDDER_ID:
                 TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
+                if (!(te instanceof TileEntityShredder)) return null;
                 return new ContainerShredder(player.inventory, (TileEntityShredder) te);
             case GUI_EXCHANGER_ID:
                 return null;
@@ -43,6 +44,7 @@ public class GuiHandler implements IGuiHandler {
         switch (ID) {
             case GUI_SHREDDER_ID:
                 TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
+                if (!(te instanceof TileEntityShredder)) return null;
                 return new GuiShredder(player.inventory, (TileEntityShredder) te);
             case GUI_EXCHANGER_ID:
                 return null;

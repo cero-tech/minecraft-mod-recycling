@@ -16,8 +16,7 @@ public class ConfigShredder {
     
     @Config.Name("Recipes")
     @Config.Comment("All recipes should be stored as a string in the format 'modid:name-output-ticks'.")
-    public static final String[] recipes = {
-            // TODO
+    public static String[] recipes = {
             "minecraft:activator_rail-1-100",
             "minecraft:anvil-3-100",
             "minecraft:beacon-4-100",

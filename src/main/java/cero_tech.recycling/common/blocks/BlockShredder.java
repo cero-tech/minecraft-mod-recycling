@@ -2,6 +2,7 @@ package cero_tech.recycling.common.blocks;
 
 import cero_tech.recycling.Recycling;
 import cero_tech.recycling.client.ICustomModel;
+import cero_tech.recycling.client.gui.GuiHandler;
 import cero_tech.recycling.common.ContentRegistry;
 import cero_tech.recycling.common.tileentities.TileEntityShredder;
 import net.minecraft.block.BlockContainer;
@@ -14,7 +15,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -22,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -46,9 +47,16 @@ public class BlockShredder extends BlockContainer implements ICustomModel {
         setRegistryName(Recycling.MOD_ID + ":" + name);
         setTranslationKey(Recycling.MOD_ID + "." + name);
         setCreativeTab(CreativeTabs.SEARCH);
+        setTickRandomly(true);
         setDefaultState(blockState.getBaseState().withProperty(SHREDDING, false));
+
         ContentRegistry.BLOCKS.add(this);
         ContentRegistry.ITEMS.add(new ItemBlock(this).setRegistryName(getRegistryName()));
+    }
+
+    @Override
+    public ModelResourceLocation getModelResourceLocation() {
+        return new ModelResourceLocation(getRegistryName(), "inventory");
     }
     
     @Override
@@ -79,13 +87,11 @@ public class BlockShredder extends BlockContainer implements ICustomModel {
     
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (!worldIn.isRemote) {
-            TileEntity te = worldIn.getTileEntity(pos);
-            if (te instanceof TileEntityShredder) {
-                playerIn.displayGui((TileEntityShredder) te);
-            }
+        TileEntity te = worldIn.getTileEntity(pos);
+        if (te != null && te instanceof TileEntityShredder) {
+            playerIn.openGui(Recycling.instance, GuiHandler.GUI_SHREDDER_ID, worldIn, pos.getX(), pos.getY(), pos.getZ());
         }
-        return true;
+        return super.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
     }
     
     @Override
@@ -109,25 +115,30 @@ public class BlockShredder extends BlockContainer implements ICustomModel {
     }
     
     @Override
-    public boolean hasComparatorInputOverride(IBlockState state) {
-        return true;
-    }
-    
-    @Override
-    public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos) {
-        return Container.calcRedstone(worldIn.getTileEntity(pos));
-    }
-    
-    @Override
-    public ModelResourceLocation getModelResourceLocation() {
-        return new ModelResourceLocation(getRegistryName(), "inventory");
-    }
-    
-    @Override
     public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
-    
+
+    @Override
+    public EnumBlockRenderType getRenderType(IBlockState state) {
+        return EnumBlockRenderType.MODEL;
+    }
+
+    @Override
+    public boolean doesSideBlockRendering(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing face) {
+        return false;
+    }
+
+    @Override
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
+    }
+
+    @Override
+    public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
+        return false;
+    }
+
     @Nullable
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
@@ -153,5 +164,16 @@ public class BlockShredder extends BlockContainer implements ICustomModel {
             te.validate();
             worldIn.setTileEntity(pos, te);
         }
+    }
+
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        return state.getValue(SHREDDING) ? 1 : 0;
+    }
+
+    @Override
+    public IBlockState getStateFromMeta(int meta) {
+        boolean value = meta == 1;
+        return getDefaultState().withProperty(SHREDDING, value);
     }
 }

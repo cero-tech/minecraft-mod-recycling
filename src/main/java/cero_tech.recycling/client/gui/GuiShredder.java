@@ -3,10 +3,10 @@ package cero_tech.recycling.client.gui;
 import cero_tech.recycling.Recycling;
 import cero_tech.recycling.client.containers.ContainerShredder;
 import cero_tech.recycling.common.config.ConfigGeneral;
+import cero_tech.recycling.common.tileentities.TileEntityShredder;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -33,12 +33,12 @@ public class GuiShredder extends GuiContainer {
     private static final int[] ENERGY_OVERLAY = {176, 18};
     
     private final InventoryPlayer playerInventory;
-    private final IInventory shredderInventory;
-    
-    public GuiShredder(InventoryPlayer playerInventory, IInventory shredderInventory) {
-        super(new ContainerShredder(playerInventory, shredderInventory));
+    private final TileEntityShredder tileShredder;
+
+    public GuiShredder(InventoryPlayer playerInventory, TileEntityShredder tileShredder) {
+        super(new ContainerShredder(playerInventory, tileShredder));
         this.playerInventory = playerInventory;
-        this.shredderInventory = shredderInventory;
+        this.tileShredder = tileShredder;
     }
     
     @Override
@@ -50,7 +50,7 @@ public class GuiShredder extends GuiContainer {
     
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        String s = shredderInventory.getDisplayName().getUnformattedText();
+        String s = tileShredder.getDisplayName().getUnformattedText();
         fontRenderer.drawString(s, xSize / 2 - fontRenderer.getStringWidth(s) / 2, 6, TEXT_COLOR);
         fontRenderer.drawString(playerInventory.getDisplayName().getUnformattedText(), 8, ySize - 96 + 2, TEXT_COLOR);
     }
@@ -58,23 +58,25 @@ public class GuiShredder extends GuiContainer {
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.getTextureManager().bindTexture(GUI_TEXTURES);
-        int x = (this.width - this.xSize) / 2;
-        int y = (this.height - this.ySize) / 2;
-        this.drawTexturedModalRect(x, y, 0, 0, this.xSize, this.ySize);
+        mc.getTextureManager().bindTexture(GUI_TEXTURES);
+
+        int x = (width - xSize) / 2;
+        int y = (height - ySize) / 2;
+
+        drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
         drawProgress(x + PROGRESS_POS[0], y + PROGRESS_POS[1]);
         drawEnergy(x + ENERGY_POS[0], y + ENERGY_POS[1]);
     }
     
     private void drawProgress(int x, int y) {
-        int current = shredderInventory.getField(ContainerShredder.CURRENT_TIME_INDEX);
-        int total = shredderInventory.getField(ContainerShredder.TOTAL_TIME_INDEX);
+        int current = tileShredder.getField(ContainerShredder.CURRENT_TIME_INDEX);
+        int total = tileShredder.getField(ContainerShredder.TOTAL_TIME_INDEX);
         int progress = current != 0 && total != 0 ? current * PROGRESS_HEIGHT / total : 0;
         drawTexturedModalRect(x, y, PROGRESS_OVERLAY[0], PROGRESS_OVERLAY[1], progress + 1, PROGRESS_HEIGHT);
     }
     
     private void drawEnergy(int x, int y) {
-        int current = shredderInventory.getField(ContainerShredder.CURRENT_ENERGY_INDEX);
+        int current = tileShredder.getField(ContainerShredder.CURRENT_ENERGY_INDEX);
         int total = ConfigGeneral.energyCapacity;
         int energy = current != 0 ? current * ENERGY_HEIGHT / total : 0;
         drawTexturedModalRect(x, y - energy, ENERGY_OVERLAY[0], ENERGY_OVERLAY[1] - energy, ENERGY_WIDTH, energy + 1);

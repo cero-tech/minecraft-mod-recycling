@@ -1,7 +1,7 @@
 {
   "textures": {
-    "side": "blocks/shredder_side",
-    "bottom": "blocks/shredder_bottom"
+    "side": "recycling:blocks/shredder_side",
+    "bottom": "recycling:blocks/shredder_bottom"
   },
   "display": {
     "head": {
@@ -154,7 +154,6 @@
         15,
         16
       ],
-      "shade": false,
       "faces": {
         "north": {
           "texture": "#side",

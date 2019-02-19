@@ -1,0 +1,23 @@
+{
+  "forge_marker": 1,
+  "variants": {
+    "normal": {
+      "model": "recycling:shredder"
+    },
+    "inventory": {
+      "model": "recycling:shredder"
+    },
+    "shredding=false": {
+      "model": "recycling:shredder",
+      "textures": {
+        "top": "recycling:blocks/shredder_top_inactive"
+      }
+    },
+    "shredding=true": {
+      "model": "recycling:shredder",
+      "textures": {
+        "top": "recycling:blocks/shredder_top_active"
+      }
+    }
+  }
+}

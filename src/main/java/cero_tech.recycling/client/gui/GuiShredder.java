@@ -1,6 +1,5 @@
 package cero_tech.recycling.client.gui;
 
-import cero_tech.recycling.Recycling;
 import cero_tech.recycling.client.containers.ContainerShredder;
 import cero_tech.recycling.common.config.ConfigGeneral;
 import cero_tech.recycling.common.tileentities.TileEntityShredder;
@@ -21,8 +20,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiShredder extends GuiContainer {
-    
-    private static final ResourceLocation GUI_TEXTURES = new ResourceLocation(Recycling.MOD_ID + ":textures/gui/shredder.png");
+
+    private static final ResourceLocation GUI_TEXTURES = new ResourceLocation("textures/gui/shredder.png");
     private static final int TEXT_COLOR = 4210752;
     private static final int PROGRESS_HEIGHT = 24;
     private static final int[] PROGRESS_POS = {79, 34};

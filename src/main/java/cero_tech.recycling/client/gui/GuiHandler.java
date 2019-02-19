@@ -3,7 +3,6 @@ package cero_tech.recycling.client.gui;
 import cero_tech.recycling.client.containers.ContainerShredder;
 import cero_tech.recycling.common.tileentities.TileEntityShredder;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
@@ -28,9 +27,7 @@ public class GuiHandler implements IGuiHandler {
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         switch (ID) {
             case GUI_SHREDDER_ID:
-                TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
-                if (!(te instanceof TileEntityShredder)) return null;
-                return new ContainerShredder(player.inventory, (TileEntityShredder) te);
+                return new ContainerShredder(player.inventory, (TileEntityShredder) world.getTileEntity(new BlockPos(x, y, z)));
             case GUI_EXCHANGER_ID:
                 return null;
             default:
@@ -43,9 +40,7 @@ public class GuiHandler implements IGuiHandler {
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         switch (ID) {
             case GUI_SHREDDER_ID:
-                TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
-                if (!(te instanceof TileEntityShredder)) return null;
-                return new GuiShredder(player.inventory, (TileEntityShredder) te);
+                return new GuiShredder(player.inventory, (TileEntityShredder) world.getTileEntity(new BlockPos(x, y, z)));
             case GUI_EXCHANGER_ID:
                 return null;
             default:

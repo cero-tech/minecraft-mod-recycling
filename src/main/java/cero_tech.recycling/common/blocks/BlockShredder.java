@@ -87,8 +87,7 @@ public class BlockShredder extends BlockContainer implements ICustomModel {
     
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        TileEntity te = worldIn.getTileEntity(pos);
-        if (te != null && te instanceof TileEntityShredder) {
+        if (!worldIn.isRemote && !playerIn.isSneaking()) {
             playerIn.openGui(Recycling.instance, GuiHandler.GUI_SHREDDER_ID, worldIn, pos.getX(), pos.getY(), pos.getZ());
         }
         return super.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);

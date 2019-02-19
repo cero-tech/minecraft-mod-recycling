@@ -16,12 +16,12 @@ import net.minecraft.item.Item;
  **/
 
 public class ItemScrap extends Item implements ICustomModel {
-    
-    public ItemScrap(String name) {
+
+    public ItemScrap(String name, int maxStackSize) {
         setRegistryName(Recycling.MOD_ID + ":" + name);
         setTranslationKey(Recycling.MOD_ID + "." + name);
         setCreativeTab(CreativeTabs.SEARCH);
-        // TODO: setMaxStackSize(INVENTORY_STACK_LIMIT);
+        setMaxStackSize(maxStackSize);
         ContentRegistry.ITEMS.add(this);
     }
     

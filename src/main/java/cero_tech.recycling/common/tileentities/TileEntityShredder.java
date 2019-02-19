@@ -4,7 +4,7 @@ import cero_tech.recycling.Recycling;
 import cero_tech.recycling.client.containers.ContainerShredder;
 import cero_tech.recycling.common.ContentRegistry;
 import cero_tech.recycling.common.blocks.BlockShredder;
-import cero_tech.recycling.common.config.ConfigShredder;
+import cero_tech.recycling.common.config.ConfigGeneral;
 import cero_tech.recycling.common.recipes.RecipeRegistry;
 import cero_tech.recycling.common.recipes.RecipeShredder;
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
 
 /**
  * Name: TileEntityShredder
- * Description:
+ * Description: TileEntity logic for the shredder machine.
  * Author: cero_tech
  *
  * Last Update: 2/13/2019
@@ -44,6 +44,7 @@ public class TileEntityShredder extends TileEntityLockable implements ITickable,
     
     // Class variables
     private NonNullList<ItemStack> shredderItemStacks = NonNullList.withSize(2, ItemStack.EMPTY);
+    private int energyUsage = ConfigGeneral.energyUsage;
     private int totalShredTime;
     private int currentShredTime;
     private String shredderCustomName;
@@ -51,7 +52,7 @@ public class TileEntityShredder extends TileEntityLockable implements ITickable,
     // Capability handlers
     private IItemHandler handlerInput = new SidedInvWrapper(this, INPUT_FACE);
     private IItemHandler handlerOutput = new SidedInvWrapper(this, OUTPUT_FACE);
-    private EnergyStorage handlerEnergy = new EnergyStorage(ConfigShredder.energyCapacity);
+    private EnergyStorage handlerEnergy = new EnergyStorage(ConfigGeneral.energyCapacity);
     
     public void setCustomName(String name) {
         shredderCustomName = name;
@@ -140,7 +141,7 @@ public class TileEntityShredder extends TileEntityLockable implements ITickable,
     
     @Override
     public int getInventoryStackLimit() {
-        return ConfigShredder.maxStackSize;
+        return ConfigGeneral.maxStackSize;
     }
     
     @Override
@@ -195,7 +196,7 @@ public class TileEntityShredder extends TileEntityLockable implements ITickable,
     @Override
     public void clear() {
         shredderItemStacks.clear();
-        handlerEnergy = new EnergyStorage(ConfigShredder.energyCapacity);
+        handlerEnergy.extractEnergy(handlerEnergy.getMaxEnergyStored(), false);
     }
     
     @Override
@@ -207,7 +208,7 @@ public class TileEntityShredder extends TileEntityLockable implements ITickable,
             }
             if (isShredding()) {
                 --currentShredTime;
-                handlerEnergy.extractEnergy(ConfigShredder.energyUsage, false);
+                handlerEnergy.extractEnergy(energyUsage, false);
                 if (!isShredding()) {
                     shred();
                 }
@@ -272,7 +273,7 @@ public class TileEntityShredder extends TileEntityLockable implements ITickable,
     
     private boolean canShred() {
         return RecipeRegistry.shredderRecipeExists(shredderItemStacks.get(ContainerShredder.INPUT_SLOT_INDEX)) &&
-                handlerEnergy.getEnergyStored() > ConfigShredder.energyUsage &&
+                handlerEnergy.getEnergyStored() > energyUsage &&
                 shredderItemStacks.get(ContainerShredder.OUTPUT_SLOT_INDEX).getCount() + RecipeRegistry.getShredderRecipeScrapCount(shredderItemStacks.get(ContainerShredder.INPUT_SLOT_INDEX)) < getInventoryStackLimit();
     }
     
@@ -288,11 +289,11 @@ public class TileEntityShredder extends TileEntityLockable implements ITickable,
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
+        clear();
+
         totalShredTime = compound.getInteger("TotalShredTime");
         currentShredTime = compound.getInteger("CurrentShredTime");
-        handlerEnergy.extractEnergy(ConfigShredder.energyCapacity, false);
         handlerEnergy.receiveEnergy(compound.getInteger("CurrentEnergy"), false);
-        shredderItemStacks.clear();
         ItemStackHelper.loadAllItems(compound, shredderItemStacks);
     
         if (compound.hasKey("CustomName", 8)) {

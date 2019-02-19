@@ -20,7 +20,7 @@ public class RecipeRegistry {
     public static void registerShredderRecipes() {
         for (String recipe : ConfigShredder.recipes) {
             String[] splitRecipe = recipe.split("-");
-            if (splitRecipe.length == 3) {
+            if (splitRecipe.length == 3 && splitRecipe[0] != null) {
                 ItemStack stack = new ItemStack(Item.getByNameOrId(splitRecipe[0]));
                 int output = Integer.getInteger(splitRecipe[1]);
                 int time = Integer.getInteger(splitRecipe[2]);

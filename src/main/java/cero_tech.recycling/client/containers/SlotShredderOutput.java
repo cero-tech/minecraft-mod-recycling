@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 
 /**
  * Name: SlotShredderOutput
- * Description: An extension of a Slot that does not allow inserting ItemStacks.
+ * Description: A Slot that does not allow inserting ItemStacks.
  * Author: cero_tech
  *
  * Last Update: 2/14/2019

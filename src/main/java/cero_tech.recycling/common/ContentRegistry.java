@@ -5,6 +5,7 @@ import cero_tech.recycling.client.ICustomModel;
 import cero_tech.recycling.common.blocks.BlockShredder;
 import cero_tech.recycling.common.config.ConfigGeneral;
 import cero_tech.recycling.common.items.ItemScrap;
+import cero_tech.recycling.common.tileentities.TileEntityShredder;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -12,6 +13,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.util.ArrayList;
 
@@ -47,6 +49,7 @@ public class ContentRegistry {
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
         event.getRegistry().registerAll(BLOCKS.toArray(new Block[0]));
+        GameRegistry.registerTileEntity(TileEntityShredder.class, TileEntityShredder.getKey());
     }
 
     @SubscribeEvent

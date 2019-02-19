@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 
 /**
  * Name: RecipeShredder
- * Description:
+ * Description: Data storage for Shredder recipes.
  * Author: cero_tech
  *
  * Last Update: 2/15/2019

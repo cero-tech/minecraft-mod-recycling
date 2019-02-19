@@ -2,7 +2,7 @@ package cero_tech.recycling.client.gui;
 
 import cero_tech.recycling.Recycling;
 import cero_tech.recycling.client.containers.ContainerShredder;
-import cero_tech.recycling.common.config.ConfigShredder;
+import cero_tech.recycling.common.config.ConfigGeneral;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -75,7 +75,7 @@ public class GuiShredder extends GuiContainer {
     
     private void drawEnergy(int x, int y) {
         int current = shredderInventory.getField(ContainerShredder.CURRENT_ENERGY_INDEX);
-        int total = ConfigShredder.energyCapacity;
+        int total = ConfigGeneral.energyCapacity;
         int energy = current != 0 ? current * ENERGY_HEIGHT / total : 0;
         drawTexturedModalRect(x, y - energy, ENERGY_OVERLAY[0], ENERGY_OVERLAY[1] - energy, ENERGY_WIDTH, energy + 1);
     }

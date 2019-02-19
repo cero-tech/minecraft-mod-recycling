@@ -82,7 +82,7 @@ public class BlockShredder extends BlockContainer implements ICustomModel {
         if (!worldIn.isRemote) {
             TileEntity te = worldIn.getTileEntity(pos);
             if (te instanceof TileEntityShredder) {
-                playerIn.displayGUIChest((TileEntityShredder)te);
+                playerIn.displayGui((TileEntityShredder) te);
             }
         }
         return true;

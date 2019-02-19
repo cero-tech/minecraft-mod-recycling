@@ -7,6 +7,7 @@ import cero_tech.recycling.common.blocks.BlockShredder;
 import cero_tech.recycling.common.config.ConfigGeneral;
 import cero_tech.recycling.common.recipes.RecipeRegistry;
 import cero_tech.recycling.common.recipes.RecipeShredder;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -14,10 +15,15 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntityLockable;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
@@ -30,7 +36,7 @@ import javax.annotation.Nullable;
 
 /**
  * Name: TileEntityShredder
- * Description: TileEntity logic for the shredder machine.
+ * Description: TileEntity logic for the Shredder machine.
  * Author: cero_tech
  *
  * Last Update: 2/13/2019
@@ -53,6 +59,10 @@ public class TileEntityShredder extends TileEntityLockable implements ITickable,
     private IItemHandler handlerInput = new SidedInvWrapper(this, INPUT_FACE);
     private IItemHandler handlerOutput = new SidedInvWrapper(this, OUTPUT_FACE);
     private EnergyStorage handlerEnergy = new EnergyStorage(ConfigGeneral.energyCapacity);
+
+    public static ResourceLocation getKey() {
+        return new ResourceLocation(Recycling.MOD_ID + ":te_shredder");
+    }
     
     public void setCustomName(String name) {
         shredderCustomName = name;
@@ -74,7 +84,15 @@ public class TileEntityShredder extends TileEntityLockable implements ITickable,
         }
         return super.getCapability(capability, facing);
     }
-    
+
+    @Override
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
+        if (newState.getBlock() instanceof BlockShredder) {
+            return false;
+        }
+        return super.shouldRefresh(world, pos, oldState, newState);
+    }
+
     @Override
     public int[] getSlotsForFace(EnumFacing side) {
         return side == INPUT_FACE ? new int[] {ContainerShredder.INPUT_SLOT_INDEX}: side == OUTPUT_FACE ? new int[] {ContainerShredder.OUTPUT_SLOT_INDEX}: new int[0];
@@ -314,5 +332,22 @@ public class TileEntityShredder extends TileEntityLockable implements ITickable,
         }
         
         return compound;
+    }
+
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        return writeToNBT(super.getUpdateTag());
+    }
+
+    @Nullable
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        NBTTagCompound tag = writeToNBT(new NBTTagCompound());
+        return new SPacketUpdateTileEntity(getPos(), 1, tag);
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        readFromNBT(pkt.getNbtCompound());
     }
 }

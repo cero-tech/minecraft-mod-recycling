@@ -1,5 +1,6 @@
 package cero_tech.recycling;
 
+import cero_tech.recycling.client.gui.GuiHandler;
 import cero_tech.recycling.proxy.CommonProxy;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -7,6 +8,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 /**
  * Name: Recycling
@@ -63,7 +65,9 @@ public class Recycling {
     public static void preInit(FMLPreInitializationEvent event) {}
 
     @SubscribeEvent
-    public static void init(FMLInitializationEvent event) {}
+    public static void init(FMLInitializationEvent event) {
+        NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
+    }
 
     @SubscribeEvent
     public static void postnit(FMLPostInitializationEvent event) {}

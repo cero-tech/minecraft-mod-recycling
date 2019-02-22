@@ -2,7 +2,6 @@ package cero_tech.recycling.common.blocks;
 
 import cero_tech.recycling.Recycling;
 import cero_tech.recycling.client.ICustomModel;
-import cero_tech.recycling.client.gui.GuiHandler;
 import cero_tech.recycling.common.ContentRegistry;
 import cero_tech.recycling.common.tileentities.TileEntityShredder;
 import net.minecraft.block.BlockContainer;
@@ -27,7 +26,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -35,12 +36,12 @@ import java.util.Random;
  * Description: A block that recycles ItemStacks into scrap.
  * Author: cero_tech
  *
- * Last Update: 2/13/2019
+ * Created: 2/13/2019
  **/
 
 public class BlockShredder extends BlockContainer implements ICustomModel {
-    
-    public static final PropertyBool SHREDDING = PropertyBool.create("shredding");
+
+    private static final PropertyBool SHREDDING = PropertyBool.create("shredding");
     
     public BlockShredder(String name) {
         super(Material.IRON);
@@ -51,14 +52,15 @@ public class BlockShredder extends BlockContainer implements ICustomModel {
         setDefaultState(blockState.getBaseState().withProperty(SHREDDING, false));
 
         ContentRegistry.BLOCKS.add(this);
-        ContentRegistry.ITEMS.add(new ItemBlock(this).setRegistryName(getRegistryName()));
+        ContentRegistry.ITEMS.add(new ItemBlock(this).setRegistryName(Objects.requireNonNull(getRegistryName())));
     }
 
     @Override
     public ModelResourceLocation getModelResourceLocation() {
-        return new ModelResourceLocation(getRegistryName(), "inventory");
+        return new ModelResourceLocation(Objects.requireNonNull(getRegistryName()), "inventory");
     }
-    
+
+    @Nonnull
     @Override
     public Item getItemDropped(IBlockState state, Random rand, int fortune) {
         return Item.getItemFromBlock(this);
@@ -87,10 +89,15 @@ public class BlockShredder extends BlockContainer implements ICustomModel {
     
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (!worldIn.isRemote && !playerIn.isSneaking()) {
-            playerIn.openGui(Recycling.instance, GuiHandler.GUI_SHREDDER_ID, worldIn, pos.getX(), pos.getY(), pos.getZ());
+        if (worldIn.isRemote) return true;
+
+        Recycling.instance.writeInfo("Shredder right clicked");
+        TileEntity te = worldIn.getTileEntity(pos);
+        if (te instanceof TileEntityShredder) {
+            Recycling.instance.writeInfo("Opening Shredder GUI...");
+            playerIn.displayGUIChest((TileEntityShredder) te);
         }
-        return super.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
+        return true;
     }
     
     @Override
@@ -104,7 +111,7 @@ public class BlockShredder extends BlockContainer implements ICustomModel {
     }
     
     @Override
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+    public void breakBlock(World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state) {
         TileEntity te = worldIn.getTileEntity(pos);
         if (te instanceof TileEntityShredder) {
             InventoryHelper.dropInventoryItems(worldIn, pos, (TileEntityShredder)te);
@@ -112,12 +119,15 @@ public class BlockShredder extends BlockContainer implements ICustomModel {
         }
         super.breakBlock(worldIn, pos, state);
     }
-    
+
+    @Nonnull
     @Override
     public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 
+    @Nonnull
+    @SuppressWarnings("deprecation")
     @Override
     public EnumBlockRenderType getRenderType(IBlockState state) {
         return EnumBlockRenderType.MODEL;
@@ -128,6 +138,7 @@ public class BlockShredder extends BlockContainer implements ICustomModel {
         return false;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean isOpaqueCube(IBlockState state) {
         return false;
@@ -140,10 +151,11 @@ public class BlockShredder extends BlockContainer implements ICustomModel {
 
     @Nullable
     @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta) {
+    public TileEntity createNewTileEntity(@Nonnull World worldIn, int meta) {
         return new TileEntityShredder();
     }
-    
+
+    @Nonnull
     @Override
     protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, SHREDDING);
@@ -168,11 +180,5 @@ public class BlockShredder extends BlockContainer implements ICustomModel {
     @Override
     public int getMetaFromState(IBlockState state) {
         return state.getValue(SHREDDING) ? 1 : 0;
-    }
-
-    @Override
-    public IBlockState getStateFromMeta(int meta) {
-        boolean value = meta == 1;
-        return getDefaultState().withProperty(SHREDDING, value);
     }
 }

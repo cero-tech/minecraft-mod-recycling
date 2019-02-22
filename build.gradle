@@ -40,12 +40,6 @@ jar {
     archiveName = "${mod_id}-${mc_version}-${main_version}.${build_version}.jar"
 }
 
-//task deobfJar {
-//    from sourceSets.main.output
-//        archiveName = "${mod_id}-${mc_version}-${main_version}.${build_version}-deobf.jar"
-//    classifier = 'deobf'
-//}
-
 processResources {
     inputs.property "mod_id", project.archivesBaseName
     inputs.property "mod_version", project.version

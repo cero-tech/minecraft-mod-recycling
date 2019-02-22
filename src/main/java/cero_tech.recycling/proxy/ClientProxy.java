@@ -2,10 +2,11 @@ package cero_tech.recycling.proxy;
 
 /**
  * Name: ClientProxy
- * Description:
+ * Description: Client side initialization and event handling.
  * Author: cero_tech
  *
- * Last Update: 2/13/2019
+ * Created: 2/13/2019
  **/
 
+@SuppressWarnings("WeakerAccess")
 public class ClientProxy extends CommonProxy {}

@@ -22,9 +22,10 @@ import java.util.ArrayList;
  * Description: Contains all blocks/items and registers them.
  * Author: cero_tech
  *
- * Last Update: 2/15/2019
+ * Created: 2/15/2019
  **/
 
+@SuppressWarnings("WeakerAccess")
 @Mod.EventBusSubscriber(modid = Recycling.MOD_ID)
 public class ContentRegistry {
     
@@ -33,10 +34,10 @@ public class ContentRegistry {
     public static final ArrayList<Item> ITEMS = new ArrayList<>();
     
     // Blocks
-    public static BlockShredder blockShredder;
+    public static final BlockShredder blockShredder;
 
     // Items
-    public static ItemScrap itemScrap;
+    public static final ItemScrap itemScrap;
 
     static {
         // Blocks
@@ -48,27 +49,38 @@ public class ContentRegistry {
 
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
+        Recycling.instance.writeInfo("Registering Blocks...");
         event.getRegistry().registerAll(BLOCKS.toArray(new Block[0]));
+        Recycling.instance.writeInfo("Finished Registering Blocks");
+
+        Recycling.instance.writeInfo("Registering Tile Entities...");
         GameRegistry.registerTileEntity(TileEntityShredder.class, TileEntityShredder.getKey());
+        Recycling.instance.writeInfo("Finished Registering Tile Entities");
     }
 
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
+        Recycling.instance.writeInfo("Registering Items...");
         event.getRegistry().registerAll(ITEMS.toArray(new Item[0]));
+        Recycling.instance.writeInfo("Finished Registering Items");
     }
 
     @SubscribeEvent
     public static void registerModels(ModelRegistryEvent event) {
+        Recycling.instance.writeInfo("Registering Block Models...");
         for (Block block : BLOCKS) {
             if (block instanceof ICustomModel) {
                 ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), 0, ((ICustomModel) block).getModelResourceLocation());
             }
         }
+        Recycling.instance.writeInfo("Finished Registering Block Models");
 
+        Recycling.instance.writeInfo("Registering Item Models...");
         for (Item item : ITEMS) {
             if (item instanceof ICustomModel) {
                 ModelLoader.setCustomModelResourceLocation(item, 0, ((ICustomModel) item).getModelResourceLocation());
             }
         }
+        Recycling.instance.writeInfo("Finished Registering Item Models");
     }
 }

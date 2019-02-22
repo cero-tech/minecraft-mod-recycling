@@ -1,23 +1,22 @@
 package cero_tech.recycling;
 
-import cero_tech.recycling.client.gui.GuiHandler;
 import cero_tech.recycling.proxy.CommonProxy;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Name: Recycling
  * Description: Contains mod information, instance, proxy, and initializes the mod.
  * Author: cero_tech
  *
- * Last Update: 2/13/2019
+ * Created: 2/13/2019
  **/
 
+@SuppressWarnings("WeakerAccess")
 @Mod(
         modid = Recycling.MOD_ID,
         name = Recycling.MOD_NAME,
@@ -50,25 +49,43 @@ public class Recycling {
 
     /**
      *
-     * Proxy instance
+     * Proxy Instance
      *
      **/
     @SidedProxy(clientSide = PROXY_PREFIX + "ClientProxy", serverSide = PROXY_PREFIX + "CommonProxy")
-    public static CommonProxy proxy;
+    private static CommonProxy proxy;
 
     /**
      *
-     * Initialization methods
+     * Mod Logger
      *
      **/
-    @SubscribeEvent
-    public static void preInit(FMLPreInitializationEvent event) {}
+    private static Logger logger;
 
-    @SubscribeEvent
-    public static void init(FMLInitializationEvent event) {
-        NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
+    /**
+     * Initialization Methods
+     **/
+    @Mod.EventHandler
+    public static void preInit(FMLPreInitializationEvent event) {
+        logger = event.getModLog();
+        proxy.preInit(event);
     }
 
-    @SubscribeEvent
-    public static void postnit(FMLPostInitializationEvent event) {}
+    @Mod.EventHandler
+    public static void init(FMLInitializationEvent event) {
+        proxy.init(event);
+    }
+
+    @Mod.EventHandler
+    public static void postInit(FMLPostInitializationEvent event) {
+        proxy.postInit(event);
+    }
+
+    public void writeInfo(String msg) {
+        logger.info(msg);
+    }
+
+    public void writeError(String msg) {
+        logger.error(msg);
+    }
 }

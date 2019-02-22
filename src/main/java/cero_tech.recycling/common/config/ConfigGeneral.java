@@ -7,10 +7,11 @@ import net.minecraftforge.common.config.Config;
  * Name: ConfigGeneral
  * Description: Contains all general configuration variable.
  * Author: cero_tech
- * <p>
- * Last Update: 2/19/2019
+ *
+ * Created: 2/19/2019
  **/
 
+@SuppressWarnings("CanBeFinal")
 @Config(modid = Recycling.MOD_ID, name = Recycling.MOD_NAME)
 public class ConfigGeneral {
 

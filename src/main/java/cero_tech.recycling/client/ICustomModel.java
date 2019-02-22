@@ -9,7 +9,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Description: This interface adds a single function to retrieve an item/block model resource location.
  * Author: cero_tech
  *
- * Last Update: 2/13/2019
+ * Created: 2/13/2019
  **/
 
 public interface ICustomModel {

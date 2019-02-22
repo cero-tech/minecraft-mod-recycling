@@ -1,5 +1,6 @@
 {
   "textures": {
+    "particle": "recycling:blocks/shredder_bottom",
     "side": "recycling:blocks/shredder_side",
     "bottom": "recycling:blocks/shredder_bottom"
   },

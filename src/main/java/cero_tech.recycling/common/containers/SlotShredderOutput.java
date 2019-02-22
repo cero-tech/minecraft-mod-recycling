@@ -1,4 +1,4 @@
-package cero_tech.recycling.client.containers;
+package cero_tech.recycling.common.containers;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -6,14 +6,17 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
+import javax.annotation.Nonnull;
+
 /**
  * Name: SlotShredderOutput
  * Description: A Slot that does not allow inserting ItemStacks.
  * Author: cero_tech
  *
- * Last Update: 2/14/2019
+ * Created: 2/14/2019
  **/
 
+@SuppressWarnings("WeakerAccess")
 public class SlotShredderOutput extends SlotItemHandler {
     
     private final EntityPlayer player;
@@ -25,21 +28,23 @@ public class SlotShredderOutput extends SlotItemHandler {
     }
     
     @Override
-    public boolean isItemValid(ItemStack stack) {
+    public boolean isItemValid(@Nonnull ItemStack stack) {
         return false;
     }
-    
+
+    @Nonnull
     @Override
     public ItemStack decrStackSize(int amount) {
         if (getHasStack()) {
             removeCount += Math.min(amount, getStack().getCount());
         }
-    
+
         return super.decrStackSize(amount);
     }
-    
+
+    @Nonnull
     @Override
-    public ItemStack onTake(EntityPlayer thePlayer, ItemStack stack) {
+    public ItemStack onTake(EntityPlayer thePlayer, @Nonnull ItemStack stack) {
         onCrafting(stack);
         super.onTake(thePlayer, stack);
         return stack;
